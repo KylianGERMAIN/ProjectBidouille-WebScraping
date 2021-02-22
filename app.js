@@ -76,19 +76,23 @@ const ManageARGV = async () => {
   const results = [];
   const jobs = await page.$$("h2.title > a");
 
-  for (const job of jobs) {
-    await job.click();
-    await page.waitForTimeout(7000);
-    const jobDescription = await getJobDescription(page);
-    if (jobDescription.title != "") {
-      results.push({
-        salary: jobDescription.salary,
-        location: jobDescription.location,
-        title: jobDescription.title,
-        url: await page.url(),
-      });
+  try {
+    for (const job of jobs) {
+      await job.click();
+      await page.waitForTimeout(4000);
+      const jobDescription = await getJobDescription(page);
+      if (jobDescription.title != "") {
+        results.push({
+          salary: jobDescription.salary,
+          location: jobDescription.location,
+          title: jobDescription.title,
+          url: await page.url(),
+        });
+      }
     }
+    CreateJSON(results);
+  } catch (error) {
+    CreateJSON(results);
   }
-  CreateJSON(results);
   await browser.close();
 })();
